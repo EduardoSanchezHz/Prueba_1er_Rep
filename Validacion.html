@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Validación de Usuario</title>
+    <style>
+        /* Estilos CSS para la apariencia de la interfaz */
+        .container {
+            margin: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 200px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+        }
+
+        .message {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Validación de Usuario</h2>
+        <form id="loginForm">
+            <label for="username">Usuario:</label>
+            <input type="text" id="username" required>
+
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" required>
+
+            <button type="submit">Ingresar</button>
+        </form>
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        // Manejar el envío del formulario
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Evitar el envío del formulario
+
+            // Obtener los valores de usuario y contraseña
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+
+            // Realizar una solicitud al servidor (puedes usar AJAX o Fetch API)
+            // En este ejemplo, asumiremos que el servidor responde con un objeto JSON
+            // que contiene un campo "valid" que indica si los datos son válidos o no.
+            // Puedes ajustar esto según la lógica de validación en tu servidor.
+
+            // Aquí se muestra un ejemplo de cómo podrías manejar la respuesta del servidor:
+            var request = new XMLHttpRequest();
+            request.open("POST", "/validar_usuario", true);
+            request.setRequestHeader("Content-Type", "application/json");
+            request.onreadystatechange = function() {
+                if (request.readyState === XMLHttpRequest.DONE) {
+                    if (request.status === 200) {
+                        var response = JSON.parse(request.responseText);
+                        if (response.valid) {
+                            document.getElementById("message").innerHTML = "Acceso concedido";
+                        } else {
+                            document.getElementById("message").innerHTML = "Acceso denegado";
+                        }
+                    } else {
+                        document.getElementById("message").innerHTML = "Error en la solicitud";
+                    }
+                }
+            };
+            request.send(JSON.stringify({ username: username, password: password }));
+        });
+    </script>
+</body>
+</html>
